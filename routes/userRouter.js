@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const dotenv = require("dotenv");
+dotenv.config();
 const { 
   test, 
   registerUser, 
@@ -21,6 +23,7 @@ const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const region = process.env.AWS_REGION;
 const bucketName = process.env.S3_BUCKET_NAME;
+console.log(process.env.S3_BUCKET_NAME);
 
 aws.config.update({
   accessKeyId: accessKeyId,
@@ -42,9 +45,6 @@ const upload = multer({
     }
   })
 })
-
-const dotenv = require("dotenv");
-dotenv.config();
 
 const {OAuth2Client, JWT} = require("google-auth-library");
 
