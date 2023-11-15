@@ -52,7 +52,8 @@ const upload = multer({
           await s3StreamUpload({
             Bucket: bucketName,
             Key: uniqueFileKey,
-            Body: buffer
+            Body: buffer,
+            ACL: 'public-read'
           });
           cb(null, {
             path: `https://${bucketName}.s3.${region}.amazonaws.com/${uniqueFileKey}`, // The S3 url to the uploaded file
