@@ -13,22 +13,9 @@ const {
   uploadAvatar
 } = require("../controllers/authController");
 
-// Avatar upload middleware
-const path = require("path");
 const multer = require("multer");
 
-const uploadsDir = path.resolve(__dirname, '..', '..', 'uploads');
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir)
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-});
-
-const uploadMiddleware = multer({ storage: storage })
+const uploadMiddleware = multer({ dest: "/uploads/" })
 
 const dotenv = require("dotenv");
 dotenv.config();
