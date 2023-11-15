@@ -41,6 +41,7 @@ const upload = multer({
   storage: {
     _handleFile: async function (req, file, cb) {
       const uniqueFileKey = uuidv4() + '-' + file.originalname;
+      console.log(file.originalname)
       let chunks = [];
       file.stream.on('data', (chunk) => {
         chunks.push(chunk);
