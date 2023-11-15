@@ -349,7 +349,7 @@ const uploadAvatar = async (req, res) => {
         });
     }
     
-    const fileUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${req.file.key}`;
+    const fileUrl = req.file.path;
     try {
         const token = req.cookies.authToken;  
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
