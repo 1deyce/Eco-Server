@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
+const { GetObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -373,6 +375,26 @@ const uploadAvatar = async (req, res) => {
     
 };
 
+const displayAvatar = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId);
+        const avatarKey = user.avatar;  // Assuming the avatar field stores the key to the avatar image in S3
+        
+        const command = new GetObjectCommand({
+            Bucket: bucketName,
+            Key: avatarKey,
+        });
+    
+        const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 });  // URL expires after 1 minute
+        res.redirect(signedUrl);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({message: 'Error retrieving avatar'});
+    }
+    
+}
+
 module.exports = {
     test,
     registerUser,
@@ -384,5 +406,6 @@ module.exports = {
     confirmEmail,
     sendEmail,
     updateUserAccount,
-    uploadAvatar
+    uploadAvatar,
+    displayAvatar
 }

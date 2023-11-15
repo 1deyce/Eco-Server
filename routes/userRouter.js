@@ -12,7 +12,8 @@ const {
   confirmEmail,
   sendEmail,
   updateUserAccount,
-  uploadAvatar
+  uploadAvatar,
+  displayAvatar
 } = require("../controllers/authController");
 
 // AWS S3 BUCKET
@@ -39,6 +40,7 @@ const s3StreamUpload = async (options) => {
 const getPresignedUrl = async (bucket, key) => {
   const command = new GetObjectCommand({
     Bucket: bucketName,
+    Key: key
   });
 
   const signedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 }); // URL expires after 1 hour
@@ -95,6 +97,7 @@ router.post("/reset/:id/:token", resetPassword)
 // User profile
 router.post("/profile/update", updateUserAccount)
 router.post("/profile/avatar", upload.single('avatar'), uploadAvatar)
+router.get('/avatar/:userId', displayAvatar)
 // google auth
 
 
