@@ -18,11 +18,10 @@ const {
 // AWS S3 BUCKET
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-const { S3, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const stream = require("stream");
 
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const region = process.env.AWS_REGION;
 const bucketName = process.env.S3_BUCKET_NAME;
 
@@ -35,6 +34,15 @@ const s3StreamUpload = async (options) => {
   pass.end(options.Body);
   const result = await s3.send(new PutObjectCommand(options));
   return result;
+};
+
+const getPresignedUrl = async (bucket, key) => {
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+  });
+
+  const signedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 }); // URL expires after 1 hour
+  return signedUrl;
 };
 
 const upload = multer({
@@ -53,10 +61,11 @@ const upload = multer({
             Bucket: bucketName,
             Key: uniqueFileKey,
             Body: buffer,
-            ACL: 'public-read'
           });
+
+          const presignedUrl = await getPresignedUrl(bucketName, uniqueFileKey);
           cb(null, {
-            path: `https://${bucketName}.s3.${region}.amazonaws.com/${uniqueFileKey}`, // The S3 url to the uploaded file
+            path: presignedUrl, // The pre-signed url to the uploaded file
             size: file.size,
           });
         } catch (error) {
