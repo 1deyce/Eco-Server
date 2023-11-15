@@ -343,53 +343,55 @@ const updateUserAccount = (req, res) => {
 };
 
 const uploadAvatar = async (req, res) => {
-    const { originalname } = req.file;
-    
-    if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
+    const { originalname, path: oldPath } = req.file;
+    if(!req.file) {
+        return res.status(400).json({message: 'No file uploaded'});
     }
+    const parts = originalname.split('.');
+    const ext = parts[parts.length - 1];
+    const newFilePath = oldPath + '.' + ext;
 
+    try {
+        fs.renameSync(oldPath, newFilePath);
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Error renaming file' 
+        });
+    }
+    try {
+        avatarData = fs.readFileSync(newFilePath);
+    } catch (err) {
+        return res.status(500).json({
+            message: 'Error reading file'
+        });
+    }
+    
     try {
         const token = req.cookies.authToken;  
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
     
-        const blob = bucket.file(`avatars/${userId}.${originalname.split('.').pop()}`);
-        const blobStream = blob.createWriteStream({
-            metadata: {
-                contentType: req.file.mimetype,
-            },
+        const avatar = {
+            path: newFilePath,
+            contentType: req.file.mimetype
+        };
+        
+        const user = await User.findByIdAndUpdate(
+            userId, 
+            { avatar: avatar }, 
+            { new: true }
+        );
+    
+        res.json({
+            message: 'Avatar updated!',
+            avatar: user.avatar
         });
     
-        blobStream.on('error', (err) => {
-            return res.status(500).json({ message: 'Error uploading file', error: err });
-        });
-    
-        blobStream.on('finish', async () => {
-            const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURI(blob.name)}?alt=media`;
-    
-            try {
-            const user = await User.findByIdAndUpdate(
-                userId, 
-                { avatar: publicUrl }, 
-                { new: true }
-            );
-    
-            return res.json({
-                message: 'Avatar updated!',
-                avatar: user.avatar
-            });
-            } catch (err) {
-            console.log(err);
-            return res.status(500).json({message: 'Error updating avatar'});
-            }
-        });
-        blobStream.end(req.file.buffer);
-
     } catch (err) {
         console.log(err);
-        return res.status(500).json({message: 'Error'});
+        return res.status(500).json({message: 'Error updating avatar'});
     }
+    
 };
 
 module.exports = {
@@ -403,4 +405,5 @@ module.exports = {
     confirmEmail,
     sendEmail,
     updateUserAccount,
+    uploadAvatar
 }
