@@ -19,6 +19,7 @@ const {
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 const { S3 } = require('@aws-sdk/client-s3');
+const stream = require("stream");
 
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
