@@ -28,10 +28,6 @@ const bucketName = process.env.S3_BUCKET_NAME;
 
 const s3 = new S3({ 
   region: region,
-  credentials: {
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
-  },
 });
 
 const s3StreamUpload = async (options) => {
