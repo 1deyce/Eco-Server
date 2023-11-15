@@ -19,14 +19,8 @@ const UserSchema = new Schema(
             default: null,
         },
         avatar: {
-            path: {
-                type: String,
-                default: null
-            },
-            contentType: {
-                type: String,
-                default: null
-            }
+            type: String,
+            default: null
         },
         isConfirmed: {
             type: Boolean,
