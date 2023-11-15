@@ -18,7 +18,7 @@ const {
 // AWS S3 BUCKET
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-const { S3 } = require('@aws-sdk/client-s3');
+const { S3, PutObjectCommand } = require('@aws-sdk/client-s3');
 const stream = require("stream");
 
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
@@ -34,40 +34,37 @@ const s3 = new S3({
   },
 });
 
-const s3StreamUpload = (options) => {
+const s3StreamUpload = async (options) => {
   const pass = new stream.PassThrough();
-  return {
-    writeStream: pass,
-    promise: s3.upload({ ...options, Body: pass }).promise(),
-  };
+  pass.end(options.Body);
+  const result = await s3.send(new PutObjectCommand(options));
+  return result;
 };
-
-const storage = multer.memoryStorage({
-  fileFilter: function (req, file, cb) {
-    // Add your file filter logic here
-    cb(null, true);
-  },
-});
 
 const upload = multer({
   storage: {
     _handleFile: async function (req, file, cb) {
       const uniqueFileKey = uuidv4() + '-' + file.originalname;
-      const upload = s3StreamUpload({
-        Bucket: bucketName,
-        Key: uniqueFileKey,
+      let chunks = [];
+      file.stream.on('data', (chunk) => {
+        chunks.push(chunk);
       });
-
-      file.stream.pipe(upload.writeStream);
-
-      upload.promise
-        .then((result) => {
+      file.stream.on('end', async () => {
+        const buffer = Buffer.concat(chunks);
+        try {
+          await s3StreamUpload({
+            Bucket: bucketName,
+            Key: uniqueFileKey,
+            Body: buffer
+          });
           cb(null, {
-            path: result.Location, // The S3 url to the uploaded file
+            path: `https://${bucketName}.s3.${region}.amazonaws.com/${uniqueFileKey}`, // The S3 url to the uploaded file
             size: file.size,
           });
-        })
-        .catch(cb);
+        } catch (error) {
+          cb(error);
+        }
+      });
     },
     _removeFile: function (req, file, cb) {
       // Add your file removal logic here
