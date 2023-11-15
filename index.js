@@ -7,8 +7,9 @@ const cors = require("cors");
 
 const app = express();
 
+const uri = process.env.MONGO_URL;
 // db connection
-mongoose.connect(process.env.MONGO_URL)
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopolgy: true })
 .then(() => console.log("Database connected"))
 .catch((err) => console.log("Database not connected", err))
 
