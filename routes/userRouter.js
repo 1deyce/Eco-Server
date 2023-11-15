@@ -36,10 +36,10 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: bucketName,
-    metadata: function (req, res, cb) {
+    metadata: function (req, file, cb) {
       cb(null, {fieldName: file.fieldName});
     },
-    key: function (req, res, cb) {
+    key: function (req, file, cb) {
       const uniqueFileKey = Date.now().toString() + "-" + file.originalname;
       cb(null, uniqueFileKey);
     }
