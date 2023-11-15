@@ -9,7 +9,7 @@ const app = express();
 
 const uri = "mongodb+srv://keenandeyce:sxamXbnkp9ONvxYX@cluster0.xuke2v1.mongodb.net/?retryWrites=true&w=majority";
 // db connection
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopolgy: true })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => console.log("Database connected"))
 .catch((err) => console.log("Database not connected", err))
 
