@@ -15,7 +15,7 @@ const {
 
 const multer = require("multer");
 
-const uploadMiddleware = multer({ dest: "/uploads/" })
+const uploadMiddleware = multer({ dest: "uploads/" })
 
 const dotenv = require("dotenv");
 dotenv.config();
