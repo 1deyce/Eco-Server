@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const findOrCreate = require("mongoose-findorcreate@4.0.0");
+const findOrCreate = require("mongoose-findorcreate");
 
 const UserSchema = new Schema(
     {

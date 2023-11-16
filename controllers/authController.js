@@ -9,7 +9,7 @@ const { GetObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const findOrCreate = require("mongoose-findorcreate@4.0.0");
+const findOrCreate = require("mongoose-findorcreate");
 
 // Google OAuth
 passport.use(new GoogleStrategy({
