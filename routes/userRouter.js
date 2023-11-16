@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const dotenv = require("dotenv");
 dotenv.config();
+const passport = require("passport");
 const { 
   test, 
   registerUser, 
