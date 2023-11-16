@@ -7,6 +7,22 @@ const dotenv = require("dotenv");
 dotenv.config();
 const { GetObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const findOrCreate = require("mongoose-findorcreate");
+
+// Google OAuth
+passport.use(new GoogleStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "https://celadon-llama-2fa0fe.netlify.app/auth/google/secrets"
+},
+    function(accessToken, refreshToken, profile, cb) {
+        User.findOrCreate({ googleId: profile.id }, function (err, user) {
+            return cb(err, user);
+        });
+    }
+));
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -393,7 +409,11 @@ const displayAvatar = async (req, res) => {
         return res.status(500).json({message: 'Error retrieving avatar'});
     }
     
-}
+};
+
+const googleAuth = (req, res) => {
+    passport.authenticate("google", { scope: ['profile'] })
+};
 
 module.exports = {
     test,
@@ -407,5 +427,6 @@ module.exports = {
     sendEmail,
     updateUserAccount,
     uploadAvatar,
-    displayAvatar
+    displayAvatar,
+    googleAuth
 }

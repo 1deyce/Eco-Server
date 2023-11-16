@@ -13,7 +13,8 @@ const {
   sendEmail,
   updateUserAccount,
   uploadAvatar,
-  displayAvatar
+  displayAvatar,
+  googleAuth
 } = require("../controllers/authController");
 
 // AWS S3 BUCKET
@@ -81,8 +82,6 @@ const upload = multer({
   },
 });
 
-const {OAuth2Client, JWT} = require("google-auth-library");
-
 router.get("/", test)
 router.post("/signup", registerUser)
 router.get("/confirm/:id/:token", confirmEmail)
@@ -97,8 +96,8 @@ router.post("/reset/:id/:token", resetPassword)
 // User profile
 router.post("/profile/update", updateUserAccount)
 router.post("/profile/avatar", upload.single('avatar'), uploadAvatar)
-router.get('/avatar/:userId', displayAvatar)
+router.get("/avatar/:userId", displayAvatar)
 // google auth
-
+router.get("/auth/google", googleAuth)
 
 module.exports = router;
