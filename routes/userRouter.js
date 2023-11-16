@@ -110,11 +110,14 @@ router.get('/auth/google/secrets',
     const refreshToken = jwt.sign({ id: req.user._id }, process.env.REFRESH_TOKEN_SECRET, {
       expiresIn: '7d' // refresh token lasts longer than auth token
     });
+    console.log(`authToken: ${authToken}`);
+    console.log(`refreshToken: ${refreshToken}`);
 
     res.cookie('authToken', authToken, { secure: true, httpOnly: true, sameSite: 'none' });
     res.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true, sameSite: 'none' }); // send refresh token
     res.redirect('/dashboard-b');
-});
+  }
+);
 router.post('/token', (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
