@@ -103,12 +103,16 @@ router.get("/auth/google", googleAuth)
 router.get('/auth/google/secrets', 
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
-    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+    const authToken = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
       expiresIn: '1d'
     });
 
-    res.cookie('authToken', token, { secure: true, httpOnly: true });
+    const refreshToken = jwt.sign({ id: req.user._id }, process.env.REFRESH_TOKEN_SECRET, {
+      expiresIn: '7d' // refresh token lasts longer than auth token
+    });
+
+    res.cookie('authToken', authToken, { secure: true, httpOnly: true });
+    res.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true }); // send refresh token
     res.redirect('/dashboard-b');
 });
-
 module.exports = router;
