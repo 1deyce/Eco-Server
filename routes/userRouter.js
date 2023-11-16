@@ -116,7 +116,7 @@ router.get('/auth/google/secrets',
     res.redirect('/dashboard-b');
 });
 router.post('/token', (req, res) => {
-  const refreshToken = req.body.token;
+  const refreshToken = req.cookies.token;
 
   if (!refreshToken) {
     return res.sendStatus(401);  // Unauthorized
