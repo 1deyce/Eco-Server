@@ -115,4 +115,5 @@ router.get('/auth/google/secrets',
     res.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true, sameSite: 'none' }); // send refresh token
     res.redirect('/dashboard-b');
 });
+
 module.exports = router;
