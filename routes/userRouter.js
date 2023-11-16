@@ -115,5 +115,21 @@ router.get('/auth/google/secrets',
     res.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true, sameSite: 'none' }); // send refresh token
     res.redirect('/dashboard-b');
 });
+router.post('/token', (req, res) => {
+  const refreshToken = req.body.token;
+
+  if (!refreshToken) {
+    return res.sendStatus(401);  // Unauthorized
+  }
+
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) {
+      return res.sendStatus(403);  // Forbidden
+    }
+
+    const authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    res.json({ authToken });
+  });
+});
 
 module.exports = router;
