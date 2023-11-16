@@ -99,5 +99,10 @@ router.post("/profile/avatar", upload.single('avatar'), uploadAvatar)
 router.get("/avatar/:userId", displayAvatar)
 // google auth
 router.get("/auth/google", googleAuth)
+app.get('/auth/google/secrets', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/dashboard-b');
+});
 
 module.exports = router;
