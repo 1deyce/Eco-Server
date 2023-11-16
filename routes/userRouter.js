@@ -116,7 +116,7 @@ router.get('/auth/google/secrets',
     res.redirect('/dashboard-b');
 });
 router.post('/token', (req, res) => {
-  const refreshToken = req.cookies.token;
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
     return res.sendStatus(401);  // Unauthorized
@@ -128,7 +128,9 @@ router.post('/token', (req, res) => {
     }
 
     const authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.json({ authToken });
+    res.json({
+      authToken 
+    });
   });
 });
 
