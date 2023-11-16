@@ -111,8 +111,8 @@ router.get('/auth/google/secrets',
       expiresIn: '7d' // refresh token lasts longer than auth token
     });
 
-    res.cookie('authToken', authToken, { secure: true, httpOnly: true });
-    res.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true }); // send refresh token
+    res.cookie('authToken', authToken, { secure: true, httpOnly: true, sameSite: 'none' });
+    res.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true, sameSite: 'none' }); // send refresh token
     res.redirect('/dashboard-b');
 });
 module.exports = router;

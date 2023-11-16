@@ -160,7 +160,7 @@ const loginUser = async (req, res) => {
                 {expiresIn: "1h"}, 
                 (err, token) => {
                     if (err) throw err;
-                    res.cookie("authToken", token, { sameSite: "None", secure: true }).json(user)
+                    res.cookie("authToken", token, { sameSite: "none", secure: true }).json(user)
                 }
             )  
         } 
