@@ -103,7 +103,11 @@ router.get("/auth/google", googleAuth)
 router.get('/auth/google/secrets', 
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
-    res.cookie('user', JSON.stringify(req.user), { secure: true, httpOnly: true });
+    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1d'
+    });
+
+    res.cookie('authToken', token, { secure: true, httpOnly: true });
     res.redirect('/dashboard-b');
 });
 
