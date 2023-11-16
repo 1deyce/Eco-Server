@@ -103,6 +103,7 @@ router.get("/auth/google", googleAuth)
 router.get('/auth/google/secrets', 
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
+    res.cookie('user', JSON.stringify(req.user), { secure: true, httpOnly: true });
     res.redirect('/dashboard-b');
 });
 
