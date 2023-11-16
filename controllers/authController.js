@@ -15,7 +15,7 @@ const findOrCreate = require("mongoose-findorcreate");
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://celadon-llama-2fa0fe.netlify.app/auth/google"
+    callbackURL: "https://celadon-llama-2fa0fe.netlify.app/auth/google/secrets"
 },
     function(accessToken, refreshToken, profile, cb) {
         User.findOrCreate({ googleId: profile.id }, function (err, user) {
