@@ -402,7 +402,7 @@ const displayAvatar = async (req, res) => {
             Key: avatarKey,
         });
     
-        const signedUrl = await getSignedUrl(s3, command, { expiresIn: 604800 });  // URL expires after 1 minute
+        const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 });  // URL expires after 1 minute
         res.redirect(signedUrl);
     } catch (err) {
         console.log(err);
