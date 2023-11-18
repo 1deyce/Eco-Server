@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const dotenv = require("dotenv");
 dotenv.config();
-const passport = require("passport");
 const { 
   test, 
   registerUser, 
@@ -100,43 +99,5 @@ router.post("/reset/:id/:token", resetPassword)
 router.post("/profile/update", updateUserAccount)
 router.post("/profile/avatar", upload.single('avatar'), uploadAvatar)
 router.get("/avatar/:userId", displayAvatar)
-// google auth
-router.get("/auth/google", googleAuth)
-router.get('/auth/google/secrets', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    const authToken = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1d'
-    });
-
-    const refreshToken = jwt.sign({ id: req.user._id }, process.env.REFRESH_TOKEN_SECRET, {
-      expiresIn: '7d' // refresh token lasts longer than auth token
-    });
-    console.log(`authToken: ${authToken}`);
-    console.log(`refreshToken: ${refreshToken}`);
-
-    res.cookie('authToken', authToken, { secure: true, sameSite: 'none' });
-    res.cookie('refreshToken', refreshToken, { secure: true, sameSite: 'none' }); // send refresh token
-    res.redirect('/dashboard-b');
-    res.json({authToken, refreshToken, status: 'Authenticated'});
-  }
-);
-
-router.post('/token', (req, res) => {
-  console.log(req.cookies);
-  const refreshToken = req.cookies.refreshToken;
-  if (refreshToken == null) {
-    console.log('No refresh token provided');
-    return res.sendStatus(401);
-  }
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if (err) {
-      console.log(`JWT verification error: ${err}`);
-      return res.sendStatus(403);
-    }
-    const authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.json({ authToken: authToken });
-  });
-});
 
 module.exports = router;

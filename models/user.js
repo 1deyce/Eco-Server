@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const findOrCreate = require("mongoose-findorcreate");
 
 const UserSchema = new Schema(
     {
@@ -34,8 +33,6 @@ const UserSchema = new Schema(
     },
     { timestamps: true }
 );
-
-UserSchema.plugin(findOrCreate);
 
 const UserModel = mongoose.model("User", UserSchema);
 

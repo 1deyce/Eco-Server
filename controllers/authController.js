@@ -411,10 +411,6 @@ const displayAvatar = async (req, res) => {
     
 };
 
-const googleAuth = (req, res, next) => {
-    passport.authenticate("google", { scope: ['profile'] })(req, res, next);
-};
-
 module.exports = {
     test,
     registerUser,
