@@ -115,14 +115,15 @@ router.get('/auth/google/secrets',
     console.log(`authToken: ${authToken}`);
     console.log(`refreshToken: ${refreshToken}`);
 
-    res.cookie('authToken', token, { secure: true, sameSite: 'none' });
-    res.cookie('refreshToken', token, { secure: true, sameSite: 'none' }); // send refresh token
+    res.cookie('authToken', authToken, { secure: true, sameSite: 'none' });
+    res.cookie('refreshToken', refreshToken, { secure: true, sameSite: 'none' }); // send refresh token
     // res.redirect('/dashboard-b');
     res.json({authToken, refreshToken, status: 'Authenticated'});
   }
 );
+
 router.post('/token', (req, res) => {
-  const refreshToken = req.body.token;
+  const refreshToken = req.cookies.refreshToken;
   if (refreshToken == null) return res.sendStatus(401);
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
