@@ -117,7 +117,8 @@ router.get('/auth/google/secrets',
 
     res.cookie('authToken', authToken, { secure: true, httpOnly: true, sameSite: 'none' });
     res.cookie('refreshToken', refreshToken, { secure: true, httpOnly: true, sameSite: 'none' }); // send refresh token
-    res.redirect('/dashboard-b');
+    // res.redirect('/dashboard-b');
+    res.json({authToken, refreshToken, status: 'Authenticated'});
   }
 );
 router.post('/token', (req, res) => {
