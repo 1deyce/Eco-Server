@@ -123,10 +123,17 @@ router.get('/auth/google/secrets',
 );
 
 router.post('/token', (req, res) => {
+  console.log(req.cookies);
   const refreshToken = req.cookies.refreshToken;
-  if (refreshToken == null) return res.sendStatus(401);
+  if (refreshToken == null) {
+    console.log('No refresh token provided');
+    return res.sendStatus(401);
+  }
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) {
+      console.log(`JWT verification error: ${err}`);
+      return res.sendStatus(403);
+    }
     const authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
     res.json({ authToken: authToken });
   });
