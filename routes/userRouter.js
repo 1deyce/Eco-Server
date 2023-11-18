@@ -84,11 +84,13 @@ const upload = multer({
 });
 
 router.get("/", test)
+//user auth
 router.post("/signup", registerUser)
 router.get("/confirm/:id/:token", confirmEmail)
 router.post("/login", loginUser)
 router.get("/profile", getProfile)
 router.get("/logout", logoutUser)
+// contact form
 router.post("/email", sendEmail)
 // forgot password
 router.post("/forgot", forgotPassword)
