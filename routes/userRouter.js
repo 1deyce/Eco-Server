@@ -122,21 +122,12 @@ router.get('/auth/google/secrets',
   }
 );
 router.post('/token', (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-
-  if (!refreshToken) {
-    return res.sendStatus(401);  // Unauthorized
-  }
-
+  const refreshToken = req.body.token;
+  if (refreshToken == null) return res.sendStatus(401);
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if (err) {
-      return res.sendStatus(403);  // Forbidden
-    }
-
+    if (err) return res.sendStatus(403);
     const authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.json({
-      authToken 
-    });
+    res.json({ authToken: authToken });
   });
 });
 
