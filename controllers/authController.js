@@ -423,6 +423,5 @@ module.exports = {
     sendEmail,
     updateUserAccount,
     uploadAvatar,
-    displayAvatar,
-    googleAuth
+    displayAvatar
 }
