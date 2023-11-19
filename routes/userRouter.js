@@ -13,8 +13,7 @@ const {
   sendEmail,
   updateUserAccount,
   uploadAvatar,
-  displayAvatar,
-  googleAuth
+  displayAvatar
 } = require("../controllers/authController");
 
 // AWS S3 BUCKET
