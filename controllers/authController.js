@@ -7,9 +7,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 const { GetObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const findOrCreate = require("mongoose-findorcreate");
 const UserModel = require("../models/user");
 
 // Google OAuth
