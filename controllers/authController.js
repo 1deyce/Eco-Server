@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const { GetObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const UserModel = require("../models/user");
+const bucketName = process.env.S3_BUCKET_NAME;
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
