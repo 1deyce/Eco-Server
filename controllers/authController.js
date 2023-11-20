@@ -10,6 +10,7 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const findOrCreate = require("mongoose-findorcreate");
+const UserModel = require("../models/user");
 
 // Google OAuth
 passport.use(new GoogleStrategy({
@@ -411,6 +412,21 @@ const displayAvatar = async (req, res) => {
     
 };
 
+const updateAddress = async (req, res) => {
+    try {
+        const user = await UserModel.findByIdAndUpdate(req.params.id, {
+            $set: {
+                address: req.body
+            }
+        }, { new: true });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({
+            error: error.toString()
+        })
+    }
+};
+
 module.exports = {
     test,
     registerUser,
@@ -423,5 +439,6 @@ module.exports = {
     sendEmail,
     updateUserAccount,
     uploadAvatar,
-    displayAvatar
+    displayAvatar,
+    updateAddress
 }

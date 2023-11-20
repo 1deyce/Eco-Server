@@ -13,7 +13,8 @@ const {
   sendEmail,
   updateUserAccount,
   uploadAvatar,
-  displayAvatar
+  displayAvatar,
+  updateAddress
 } = require("../controllers/authController");
 
 // AWS S3 BUCKET
@@ -98,5 +99,6 @@ router.post("/reset/:id/:token", resetPassword)
 router.post("/profile/update", updateUserAccount)
 router.post("/profile/avatar", upload.single('avatar'), uploadAvatar)
 router.get("/avatar/:userId", displayAvatar)
+router.put("/addresses/:id", updateAddress)
 
 module.exports = router;

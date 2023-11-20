@@ -18,6 +18,20 @@ const UserSchema = new Schema(
             type: String,
             default: null,
         },
+        address: {
+            streetDetails: {
+                type: String,
+                default: null,
+            },
+            province: {
+                type: String,
+                default: null,
+            },
+            country: {
+                type: String,
+                default: null,
+            },
+        },
         avatar: {
             type: String,
             default: null
