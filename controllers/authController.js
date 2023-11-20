@@ -5,9 +5,12 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
-const { GetObjectCommand } = require('@aws-sdk/client-s3');
+const { S3, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const bucketName = process.env.S3_BUCKET_NAME;
+const s3 = new S3({ 
+    region: region,
+});
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
