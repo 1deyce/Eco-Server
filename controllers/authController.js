@@ -397,8 +397,11 @@ const displayAvatar = async (req, res) => {
 };
 
 const updateAddress = async (req, res) => {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
     try {
-        const user = await UserModel.findByIdAndUpdate(req.params.id, {
+        const user = await User.findByIdAndUpdate(userId, {
             $set: {
                 address: req.body
             }
