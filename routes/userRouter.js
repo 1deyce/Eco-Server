@@ -9,13 +9,16 @@ const {
   forgotPassword,
   resetPassword, 
   logoutUser,
-  confirmEmail,
+  confirmEmail
+} = require("../controllers/authController");
+
+const {
   sendEmail,
   updateUserAccount,
   uploadAvatar,
   displayAvatar,
   updateAddress
-} = require("../controllers/authController");
+} = require("../controllers/userController");
 
 // AWS S3 BUCKET
 const multer = require("multer");
