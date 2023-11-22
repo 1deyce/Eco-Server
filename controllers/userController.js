@@ -1,6 +1,7 @@
 const User = require("../models/user")
-const { S3, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { S3, GetObjectCommand, PutObjectAclCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const fs = require("fs");
 const dotenv = require("dotenv");
 dotenv.config();
 const bucketName = process.env.S3_BUCKET_NAME;
@@ -119,15 +120,23 @@ const uploadAvatar = async (req, res) => {
         });
     }
     
-    const fileUrl = req.file.path;
+    const fileContent = fs.readFileSync(req.file.path);
+    const params = {
+        Bucket: bucketName,
+        Key: `${req.file.filename}`,
+        Body: fileContent
+    };
+
     try {
         const token = req.cookies.authToken;  
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-    
+
+        const data = await s3.send(new PutObjectCommand(params));
+
         const user = await User.findByIdAndUpdate(
             userId, 
-            { avatar: fileUrl }, 
+            { avatar: params.Key }, 
             { new: true }
         );
     
