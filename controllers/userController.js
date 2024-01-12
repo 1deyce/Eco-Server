@@ -1,4 +1,4 @@
-const User = require("../models/user")
+const User = require("../models/user");
 const fs = require("fs");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -114,37 +114,29 @@ const updateUserAccount = (req, res) => {
     });
 };
 
-const uploadAvatar = (req, res) => {
+const uploadAvatar = async (req, res) => {
     const token = req.cookies.authToken;
-
+    
     try {
-        jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-            if (err) {
-                console.error("Error verifying token:", err);
-                console.error("Token:", token);
-                return res.json({
-                    Status: "Error with token"
-                });
-            } else {
-                const user = await User.findById(decoded.id);
-                if (!user) {
-                    return res.status(404).json({ message: 'User not found' });
-                }
-            
-                const imageUrl = req.body.img; // Assuming the frontend sends the image URL as "img"
-            
-                // Update the user's avatar with the image URL
-                user.avatar = imageUrl;
-                await user.save();
-            
-                res.json({
-                    message: 'Avatar updated!',
-                    avatar: user.avatar
-                });
-            }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+    
+        const imageUrl = req.body.img; // Assuming the frontend sends the image URL as "img"
+    
+        // Update the user's avatar with the image URL
+        user.avatar = imageUrl;
+        await user.save();
+    
+        res.json({
+            message: 'Avatar updated!',
+            avatar: user.avatar,
         });
     } catch (err) {
-        console.log(err);
+        console.error('Error updating avatar:', err);
         return res.status(500).json({ message: 'Error updating avatar' });
     }
 };
