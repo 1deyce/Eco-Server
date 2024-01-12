@@ -129,12 +129,17 @@ const uploadAvatar = async (req, res) => {
     
         // Update the user's avatar with the image URL
         user.avatar = imageUrl;
-        await user.save();
-    
-        res.json({
-            message: 'Avatar updated!',
-            avatar: user.avatar,
-        });
+        try {
+            await user.save();
+            res.json({
+                message: 'Avatar updated!',
+                avatar: user.avatar,
+            });
+        } catch (error) {
+            console.error('Error saving user:', error);
+            return res.status(500).json({ message: 'Error saving user' });
+        }
+
     } catch (err) {
         console.error('Error updating avatar:', err);
         return res.status(500).json({ message: 'Error updating avatar' });
