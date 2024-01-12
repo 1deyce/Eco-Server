@@ -33,8 +33,7 @@ const UserSchema = new Schema(
             },
         },
         avatar: {
-            type: String,
-            default: ""
+            type: String
         },
         isConfirmed: {
             type: Boolean,
