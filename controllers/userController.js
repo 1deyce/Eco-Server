@@ -121,10 +121,12 @@ const uploadAvatar = async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-        const user = await User.findByIdAndUpdate(decoded.id, {avatar: imageUrl});
+        const user = await User.findById(decoded.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
+        user.avatar = String(imageUrl); // Update the avatar field
 
         try {
             await user.save();
