@@ -114,26 +114,36 @@ const updateUserAccount = (req, res) => {
     });
 };
 
-const uploadAvatar = async (req, res) => {
+const uploadAvatar = (req, res) => {
+    const token = req.cookies.authToken;
+
     try {
-        const token = req.cookies.authToken;
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.id;
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                console.error("Error verifying token:", err);
+                console.error("Token:", token);
+                return res.json({
+                    Status: "Error with token"
+                });
+            } else {
+                const userId = decoded.id;
     
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-    
-        const imageUrl = req.body.img; // Assuming the frontend sends the image URL as "img"
-    
-        // Update the user's avatar with the image URL
-        user.avatar = imageUrl;
-        await user.save();
-    
-        res.json({
-            message: 'Avatar updated!',
-            avatar: user.avatar
+                const user = User.findById(userId);
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+            
+                const imageUrl = req.body.img; // Assuming the frontend sends the image URL as "img"
+            
+                // Update the user's avatar with the image URL
+                user.avatar = imageUrl;
+                user.save();
+            
+                res.json({
+                    message: 'Avatar updated!',
+                    avatar: user.avatar
+                });
+            }
         });
     } catch (err) {
         console.log(err);
