@@ -125,10 +125,10 @@ const uploadAvatar = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
     
-        const publicId = req.body.publicId; // Assuming you send the publicId from the frontend
+        const imageUrl = req.body.img; // Assuming the frontend sends the image URL as "img"
     
-        // Update the user's avatar with the publicId
-        user.avatar = publicId;
+        // Update the user's avatar with the image URL
+        user.avatar = imageUrl;
         await user.save();
     
         res.json({
