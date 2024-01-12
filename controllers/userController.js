@@ -126,9 +126,7 @@ const uploadAvatar = (req, res) => {
                     Status: "Error with token"
                 });
             } else {
-                const userId = decoded.id;
-    
-                const user = User.findById(userId);
+                const user = User.findById(decoded.id);
                 if (!user) {
                     return res.status(404).json({ message: 'User not found' });
                 }
