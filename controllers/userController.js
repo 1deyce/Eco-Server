@@ -116,19 +116,16 @@ const updateUserAccount = (req, res) => {
 
 const uploadAvatar = async (req, res) => {
     const token = req.cookies.authToken;
+    const imageUrl = req.body.img; 
     
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-        const user = await User.findById(decoded._id);
+        const user = await User.findByIdAndUpdate(decoded.id, {avatar: imageUrl});
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-    
-        const imageUrl = req.body.img; // Assuming the frontend sends the image URL as "img"
-    
-        // Update the user's avatar with the image URL
-        user.avatar = imageUrl;
+
         try {
             await user.save();
             res.json({
