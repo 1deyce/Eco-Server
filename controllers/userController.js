@@ -118,7 +118,7 @@ const uploadAvatar = (req, res) => {
     const token = req.cookies.authToken;
 
     try {
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
             if (err) {
                 console.error("Error verifying token:", err);
                 console.error("Token:", token);
@@ -126,7 +126,7 @@ const uploadAvatar = (req, res) => {
                     Status: "Error with token"
                 });
             } else {
-                const user = User.findById(decoded.id);
+                const user = await User.findById(decoded.id);
                 if (!user) {
                     return res.status(404).json({ message: 'User not found' });
                 }
@@ -135,7 +135,7 @@ const uploadAvatar = (req, res) => {
             
                 // Update the user's avatar with the image URL
                 user.avatar = imageUrl;
-                user.save();
+                await user.save(avatar);
             
                 res.json({
                     message: 'Avatar updated!',
