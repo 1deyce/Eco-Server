@@ -37,7 +37,7 @@ router.post("/forgot", forgotPassword)
 router.post("/reset/:id/:token", resetPassword)
 // User profile
 router.post("/profile/update", updateUserAccount)
-router.post("/profile/avatar", upload.single('avatar'), uploadAvatar)
+router.post("/profile/avatar", uploadAvatar)
 router.get("/avatar/:userId", displayAvatar)
 router.put("/addresses/:id", updateAddress)
 
