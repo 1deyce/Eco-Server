@@ -115,54 +115,52 @@ const updateUserAccount = (req, res) => {
 };
 
 const uploadAvatar = async (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({
-            message: 'No file uploaded'
-        });
-    }
-    
-    const fileContent = req.file.path;
-
     try {
         const token = req.cookies.authToken;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-        
-        const uploadResult = await cloudinary.uploader.upload(fileContent, {
-            folder: 'avatars', // Optional folder in Cloudinary
-            resource_type: 'image' // Specify the resource type as an image
-        });
-        
-        const user = await User.findByIdAndUpdate(
-            userId,
-            { avatar: uploadResult.secure_url }, // Store the Cloudinary secure URL in the avatar field
-            { new: true }
-        );
-            
+    
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+    
+        const publicId = req.body.publicId; // Assuming you send the publicId from the frontend
+    
+        // Update the user's avatar with the publicId
+        user.avatar = publicId;
+        await user.save();
+    
         res.json({
             message: 'Avatar updated!',
             avatar: user.avatar
         });
-        
     } catch (err) {
         console.log(err);
         return res.status(500).json({ message: 'Error updating avatar' });
     }
 };
     
-    const displayAvatar = async (req, res) => {
-        try {
-            const { userId } = req.params;
-            const user = await User.findById(userId);
-            const avatarUrl = user.avatar; // Assuming the avatar field stores the Cloudinary secure URL
+const displayAvatar = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId);
+        const publicId = user.avatar; // Assuming the avatar field stores the publicId of the image
     
-            res.redirect(avatarUrl);
-        } catch (err) {
-            console.log(err);
-            return res.status(500).json({ message: 'Error retrieving avatar' });
-        }
+        // Generate the Cloudinary URL for the image
+        const avatarUrl = cloudinary.url(publicId, {
+            secure: true,
+            width: 200, // Set the desired width of the image
+            height: 200, // Set the desired height of the image
+            crop: 'fill' // Specify the crop mode (e.g., fill, fit, etc.)
+        });
     
-    };
+        res.redirect(avatarUrl);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: 'Error retrieving avatar' });
+    }
+};
 
 const updateAddress = async (req, res) => {
     const token = req.cookies.authToken;
