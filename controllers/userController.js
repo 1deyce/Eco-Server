@@ -135,7 +135,7 @@ const uploadAvatar = (req, res) => {
             
                 // Update the user's avatar with the image URL
                 user.avatar = imageUrl;
-                await user.save(avatar);
+                await user.save();
             
                 res.json({
                     message: 'Avatar updated!',
