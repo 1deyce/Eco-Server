@@ -1,16 +1,17 @@
 const User = require("../models/user")
-const { S3, GetObjectCommand, PutObjectAclCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const fs = require("fs");
 const dotenv = require("dotenv");
 dotenv.config();
-const bucketName = process.env.S3_BUCKET_NAME;
-const region = process.env.AWS_REGION;
-const s3 = new S3({ 
-    region: region,
-});
+const cloudinary = require("cloudinary").v2;
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+
+//cloudinary
+cloudinary.config({
+    cloud_name: 'duvw77iju',
+    api_key: '765921676642255',
+    api_secret: 'eVZIIYHsIh9KnoaACpOjEG0LfhE'
+});
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -120,57 +121,48 @@ const uploadAvatar = async (req, res) => {
         });
     }
     
-    const fileContent = fs.readFileSync(req.file.path);
-    const params = {
-        Bucket: bucketName,
-        Key: `${req.file.filename}`,
-        Body: fileContent
-    };
+    const fileContent = req.file.path;
 
     try {
-        const token = req.cookies.authToken;  
+        const token = req.cookies.authToken;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-
-        const data = await s3.send(new PutObjectCommand(params));
-
+        
+        const uploadResult = await cloudinary.uploader.upload(fileContent, {
+            folder: 'avatars', // Optional folder in Cloudinary
+            resource_type: 'image' // Specify the resource type as an image
+        });
+        
         const user = await User.findByIdAndUpdate(
-            userId, 
-            { avatar: params.Key }, 
+            userId,
+            { avatar: uploadResult.secure_url }, // Store the Cloudinary secure URL in the avatar field
             { new: true }
         );
-    
+            
         res.json({
             message: 'Avatar updated!',
             avatar: user.avatar
         });
-    
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({message: 'Error updating avatar'});
-    }
-    
-};
-
-const displayAvatar = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const user = await User.findById(userId);
-        const avatarKey = user.avatar;  // Assuming the avatar field stores the key to the avatar image in S3
         
-        const command = new GetObjectCommand({
-            Bucket: bucketName,
-            Key: avatarKey,
-        });
-    
-        const signedUrl = await getSignedUrl(s3, command, { expiresIn: 604800 });  // URL expires after 1 week
-        res.redirect(signedUrl);
     } catch (err) {
         console.log(err);
-        return res.status(500).json({message: 'Error retrieving avatar'});
+        return res.status(500).json({ message: 'Error updating avatar' });
     }
-    
 };
+    
+    const displayAvatar = async (req, res) => {
+        try {
+            const { userId } = req.params;
+            const user = await User.findById(userId);
+            const avatarUrl = user.avatar; // Assuming the avatar field stores the Cloudinary secure URL
+    
+            res.redirect(avatarUrl);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({ message: 'Error retrieving avatar' });
+        }
+    
+    };
 
 const updateAddress = async (req, res) => {
     const token = req.cookies.authToken;
