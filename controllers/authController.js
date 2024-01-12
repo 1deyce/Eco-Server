@@ -223,7 +223,7 @@ const resetPassword = (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             return res.json({
-            Status: "Error with token"
+                Status: "Error with token"
             });
         } else {
             if (!password || password.length < 6) {
@@ -233,13 +233,13 @@ const resetPassword = (req, res) => {
             }
             bcrypt.hash(password, 12)
             .then(hash => {
-            User.findByIdAndUpdate({_id: id}, {password: hash})
-            .then(u => res.send({
-                Status: "Success"
-            }))
-            .catch(err => res.send({
-                Status: err
-            }))
+                User.findByIdAndUpdate({_id: id}, {password: hash})
+                    .then(u => res.send({
+                        Status: "Success"
+                }))
+                .catch(err => res.send({
+                    Status: err
+                }))
             })
             .catch(err => res.send({Status: err}))
         }
