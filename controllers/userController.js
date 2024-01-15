@@ -151,7 +151,6 @@ const displayAvatar = async (req, res) => {
     if (!token) return res.status(401).json({ message: "No token provided"});
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        // console.log('User from JWT:', user);
         if (err) {
             if (err.name === 'TokenExpiredError') {
                 return res.status(403).json({ message: "Token expired" })
@@ -167,9 +166,9 @@ const displayAvatar = async (req, res) => {
                 // Generate the Cloudinary URL for the image
                 const avatarUrl = cloudinary.url(publicId, {
                     secure: true,
-                    width: 200, // Set the desired width of the image
-                    height: 200, // Set the desired height of the image
-                    crop: 'fill' // Specify the crop mode (e.g., fill, fit, etc.)
+                    width: 128,
+                    height: 'auto', 
+                    crop: 'cover'
                 });
 
                 res.redirect(avatarUrl);
