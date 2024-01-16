@@ -17,7 +17,8 @@ const {
   updateUserAccount,
   uploadAvatar,
   displayAvatar,
-  updateAddress
+  updateAddress,
+  submitFeedback
 } = require("../controllers/userController");
 
 //cloudinary
@@ -40,5 +41,7 @@ router.post("/profile/update", updateUserAccount)
 router.post("/profile/avatar", uploadAvatar)
 router.get("/avatar/:userId", displayAvatar)
 router.put("/addresses/:id", updateAddress)
+// feedback form
+router.post("/feedback", submitFeedback)
 
 module.exports = router;

@@ -195,10 +195,62 @@ const updateAddress = async (req, res) => {
     }
 };
 
+const submitFeedback = async (req, res) => {
+    try {
+        const token = req.cookies.authToken;
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = User.findById(decoded.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const { name, email } = user;
+        const { frequency, mostUsedFeature, improvementSuggestion, motivation } = req.body;
+        
+        transporter.sendMail({
+            from: email,
+            to: "ecotracksolutions@gmail.com",
+            subject: `Feedback from: ${name}.`,
+            text: `Hello,
+            
+            You have received feedback from ${name} (${email}).
+            
+            Frequency: ${frequency}
+            Most Used Feature: ${mostUsedFeature}
+            Improvement Suggestion: ${improvementSuggestion}
+            Motivation: ${motivation}
+            
+            Regards,
+            ${name}`,
+            html: `<p>Hello,</p>
+            
+            <p>You have received feedback from <strong>${name}</strong> (${email}).</p>
+            
+            <p>Frequency: ${frequency}</p>
+            <p>Most Used Feature: ${mostUsedFeature}</p>
+            <p>Improvement Suggestion: ${improvementSuggestion}</p>
+            <p>Motivation: ${motivation}</p>
+            
+            <p>Regards,<br>
+            ${name}</p>`
+        });
+        
+        // Return a success response
+        res.status(200).json({ message: 'Feedback submitted successfully' });
+    } catch (error) {
+        // Handle any errors that occurred during processing
+        console.error('Error submitting feedback:', error);
+        res.status(500).json({ message: 'Error submitting feedback' });
+    }
+};
+
 module.exports = {
     sendEmail,
     updateUserAccount,
     uploadAvatar,
     displayAvatar,
-    updateAddress
+    updateAddress,
+    submitFeedback
 }
