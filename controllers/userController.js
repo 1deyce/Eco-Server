@@ -195,12 +195,12 @@ const updateAddress = async (req, res) => {
     }
 };
 
-const submitFeedback = (req, res) => {
+const submitFeedback = async (req, res) => {
     try {
         const token = req.cookies.authToken;
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = User.findById(decoded.id);
+        const user = await User.findById(decoded.id);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
