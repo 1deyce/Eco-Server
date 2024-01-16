@@ -14,7 +14,7 @@ cloudinary.config({
 });
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    service: "smtp.gmail.com",
     port: 587,
     secure: true,
     auth: {
@@ -200,7 +200,7 @@ const submitFeedback = async (req, res) => {
         const token = req.cookies.authToken;
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.id);
+        const user = await User.findById(decoded.id).exec();
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
