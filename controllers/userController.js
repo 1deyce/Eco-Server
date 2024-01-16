@@ -208,36 +208,39 @@ const submitFeedback = async (req, res) => {
 
         const name = user.name;
         const email = user.email;
-        console.log(name, email);
         const { frequency, mostUsedFeature, improvementSuggestion, motivation } = req.body;
         
-        transporter.sendMail({
-            from: "ecotracksolutions@gmail.com",
-            to: "ecotracksolutions@gmail.com",
-            subject: `Feedback from: ${name}.`,
-            text: `Hello,
-            
-            You have received feedback from ${name} (${email}).
-            
-            Frequency: ${frequency}
-            Most Used Feature: ${mostUsedFeature}
-            Improvement Suggestion: ${improvementSuggestion}
-            Motivation: ${motivation}
-            
-            Regards,
-            ${name}`,
-            html: `<p>Hello,</p>
-            
-            <p>You have received feedback from <strong>${name}</strong> (${email}).</p>
-            
-            <p>Frequency: ${frequency}</p>
-            <p>Most Used Feature: ${mostUsedFeature}</p>
-            <p>Improvement Suggestion: ${improvementSuggestion}</p>
-            <p>Motivation: ${motivation}</p>
-            
-            <p>Regards,<br>
-            ${name}</p>`
-        });
+        try {
+            transporter.sendMail({
+                from: "ecotracksolutions@gmail.com",
+                to: "ecotracksolutions@gmail.com",
+                subject: `Feedback from: ${name}.`,
+                text: `Hello,
+                
+                You have received feedback from ${name} (${email}).
+                
+                Frequency: ${frequency}
+                Most Used Feature: ${mostUsedFeature}
+                Improvement Suggestion: ${improvementSuggestion}
+                Motivation: ${motivation}
+                
+                Regards,
+                ${name}`,
+                html: `<p>Hello,</p>
+                
+                <p>You have received feedback from <strong>${name}</strong> (${email}).</p>
+                
+                <p>Frequency: ${frequency}</p>
+                <p>Most Used Feature: ${mostUsedFeature}</p>
+                <p>Improvement Suggestion: ${improvementSuggestion}</p>
+                <p>Motivation: ${motivation}</p>
+                
+                <p>Regards,<br>
+                ${name}</p>`
+            });
+        } catch(error) {
+            console.error('Error sending email:', error);
+        }
         
         // Return a success response
         res.status(200).json({ message: 'Feedback submitted successfully' });
