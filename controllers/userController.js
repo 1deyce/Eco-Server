@@ -210,7 +210,7 @@ const submitFeedback = async (req, res) => {
         const { frequency, mostUsedFeature, improvementSuggestion, motivation } = req.body;
         
         transporter.sendMail({
-            from: email,
+            from: "ecotracksolutions@gmail.com",
             to: "ecotracksolutions@gmail.com",
             subject: `Feedback from: ${name}.`,
             text: `Hello,
