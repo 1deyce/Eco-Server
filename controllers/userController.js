@@ -214,7 +214,7 @@ const submitFeedback = async (req, res) => {
             transporter.sendMail({
                 from: "ecotracksolutions@gmail.com",
                 to: "ecotracksolutions@gmail.com",
-                subject: `Feedback from: ${name}.`,
+                subject: `Feedback from user: ${name}.`,
                 text: `Hello,
                 
                 You have received feedback from ${name} (${email}).
@@ -245,7 +245,7 @@ const submitFeedback = async (req, res) => {
                     res.status(200).json({ message: 'Email sent' });
                     console.log('Email sent:', info.response);
                 }
-            })
+            });
         } catch(error) {
             console.error('Error sending email:', error);
         }
