@@ -14,7 +14,7 @@ cloudinary.config({
 });
 
 const transporter = nodemailer.createTransport({
-    service: "smtp.gmail.com",
+    service: "gmail",
     port: 587,
     secure: true,
     auth: {
@@ -237,13 +237,18 @@ const submitFeedback = async (req, res) => {
                 
                 <p>Regards,<br>
                 ${name}</p>`
-            });
+            }, (error, info) => {
+                if (error) {
+                    res.status(500).json({ message: 'Error sending email' });
+                    console.log('Error sending email', error)
+                } else {
+                    res.status(200).json({ message: 'Email sent' });
+                    console.log('Email sent:', info.response);
+                }
+            })
         } catch(error) {
             console.error('Error sending email:', error);
         }
-        
-        // Return a success response
-        res.status(200).json({ message: 'Feedback submitted successfully' });
     } catch (error) {
         // Handle any errors that occurred during processing
         console.error('Error submitting feedback:', error);
