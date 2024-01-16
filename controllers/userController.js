@@ -197,7 +197,7 @@ const updateAddress = async (req, res) => {
 
 const submitFeedback = (req, res) => {
     try {
-        const { token } = req.cookies.authToken;
+        const token = req.cookies.authToken;
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = User.findById(decoded.id);
