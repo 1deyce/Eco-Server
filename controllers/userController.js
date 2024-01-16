@@ -15,7 +15,7 @@ cloudinary.config({
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
-    port: 587,
+    port: 465,
     secure: true,
     auth: {
         user: "ecotracksolutions@gmail.com",
