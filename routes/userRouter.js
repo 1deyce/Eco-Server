@@ -42,6 +42,6 @@ router.post("/profile/avatar", uploadAvatar)
 router.get("/avatar/:userId", displayAvatar)
 router.put("/addresses/:id", updateAddress)
 // feedback form
-router.get("/feedback", submitFeedback)
+router.post("/feedback", submitFeedback)
 
 module.exports = router;
