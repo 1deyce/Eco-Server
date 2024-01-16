@@ -195,7 +195,7 @@ const updateAddress = async (req, res) => {
     }
 };
 
-const submitFeedback = async (req, res) => {
+const submitFeedback = (req, res) => {
     try {
         const token = req.cookies.authToken;
 
