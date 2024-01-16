@@ -207,6 +207,7 @@ const submitFeedback = (req, res) => {
         }
 
         const { name, email } = user;
+        console.log(name, email);
         const { frequency, mostUsedFeature, improvementSuggestion, motivation } = req.body;
         
         transporter.sendMail({
