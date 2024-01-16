@@ -15,7 +15,7 @@ cloudinary.config({
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
-    port: 465,
+    port: 587,
     secure: true,
     auth: {
         user: "ecotracksolutions@gmail.com",
@@ -195,18 +195,19 @@ const updateAddress = async (req, res) => {
     }
 };
 
-const submitFeedback = (req, res) => {
+const submitFeedback = async (req, res) => {
     try {
         const token = req.cookies.authToken;
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = User.findById(decoded.id);
+        const user = await User.findById(decoded.id).exec();
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const { name, email } = user;
+        const name = user.name;
+        const email = user.email;
         console.log(name, email);
         const { frequency, mostUsedFeature, improvementSuggestion, motivation } = req.body;
         
