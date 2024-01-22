@@ -265,7 +265,7 @@ const getCollectors = async (req, res) => {
         // Return the collectors as the response
         res.json(collectors);
     } catch (error) {
-        // Handle any errors that occur during the retrieval process
+        console.error('Failed to retrieve collectors', error);
         res.status(500).json({ error: 'Failed to retrieve collectors' });
     }
 }
