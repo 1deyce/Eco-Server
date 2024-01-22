@@ -18,7 +18,8 @@ const {
   uploadAvatar,
   displayAvatar,
   updateAddress,
-  submitFeedback
+  submitFeedback,
+  getCollectors
 } = require("../controllers/userController");
 
 //cloudinary
@@ -43,5 +44,7 @@ router.get("/avatar/:userId", displayAvatar)
 router.put("/addresses/:id", updateAddress)
 // feedback form
 router.post("/feedback", submitFeedback)
+// Collectors [collection schedule]
+router.get("/collectors", getCollectors)
 
 module.exports = router;

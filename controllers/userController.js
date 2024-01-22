@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Collector = require("../models/collector");
 const fs = require("fs");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -256,11 +257,25 @@ const submitFeedback = async (req, res) => {
     }
 };
 
+const getCollectors = async (req, res) => {
+    try {
+        // Retrieve all collectors from the database
+        const collectors = await Collector.find();
+    
+        // Return the collectors as the response
+        res.json(collectors);
+    } catch (error) {
+        // Handle any errors that occur during the retrieval process
+        res.status(500).json({ error: 'Failed to retrieve collectors' });
+    }
+}
+
 module.exports = {
     sendEmail,
     updateUserAccount,
     uploadAvatar,
     displayAvatar,
     updateAddress,
-    submitFeedback
+    submitFeedback,
+    getCollectors
 }
