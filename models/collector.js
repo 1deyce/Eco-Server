@@ -8,6 +8,6 @@ const CollectorSchema = new Schema({
     }, { timestamps: true }
 );
 
-const CollectorModel = mongoose.model("collections", CollectorSchema);
+const CollectorModel = mongoose.model("collectors", CollectorSchema);
 
 module.exports = CollectorModel;
