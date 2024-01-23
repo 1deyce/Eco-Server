@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const Collector = require("../models/collector");
-const fs = require("fs");
+const Area = require("../models/area");
+const Location = require("../models/location");
 const dotenv = require("dotenv");
 dotenv.config();
 const cloudinary = require("cloudinary").v2;
@@ -259,14 +260,34 @@ const submitFeedback = async (req, res) => {
 
 const getCollectors = async (req, res) => {
     try {
-        // Retrieve all collectors from the database
         const collectors = await Collector.find();
-    
-        // Return the collectors as the response
+
         res.json(collectors);
     } catch (error) {
         console.error('Failed to retrieve collectors', error);
         res.status(500).json({ error: 'Failed to retrieve collectors' });
+    }
+}
+
+const getAreas = async (req, res) => {
+    try {
+        const areas = await Area.find();
+
+        res.json(areas);
+    } catch (error) {
+        console.error('Failed to retrieve areas', error);
+        res.status(500).json({ error: 'Failed to retrieve areas' });
+    }
+}
+
+const getLocations = async (req, res) => {
+    try {
+        const locations = await Location.find();
+
+        res.json(locations);
+    } catch (error) {
+        console.error('Failed to retrieve locations', error);
+        res.status(500).json({ error: 'Failed to retrieve locations' });
     }
 }
 
@@ -277,5 +298,7 @@ module.exports = {
     displayAvatar,
     updateAddress,
     submitFeedback,
-    getCollectors
+    getCollectors,
+    getAreas,
+    getLocations
 }
