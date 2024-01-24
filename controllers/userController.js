@@ -291,6 +291,21 @@ const getLocations = async (req, res) => {
     }
 }
 
+const collectionSchedule = async (req, res) => {
+    try {
+        const { date, time, collector, area, location } = req.body;
+
+        res.status(200).json({ 
+            message: 'Schedule submitted successfully'
+        });
+    } catch (error) {
+        console.error('Error: ',error);
+        res.status(500).jason({
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 module.exports = {
     sendEmail,
     updateUserAccount,
@@ -300,5 +315,6 @@ module.exports = {
     submitFeedback,
     getCollectors,
     getAreas,
-    getLocations
+    getLocations,
+    collectionSchedule
 }
