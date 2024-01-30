@@ -2,6 +2,7 @@ const User = require("../models/user");
 const Collector = require("../models/collector");
 const Area = require("../models/area");
 const Location = require("../models/location");
+const Route = require("../models/route");
 const dotenv = require("dotenv");
 dotenv.config();
 const cloudinary = require("cloudinary").v2;
@@ -306,6 +307,19 @@ const collectionSchedule = async (req, res) => {
     }
 }
 
+const getRoutes = async (req, res) => {
+    try {
+        const routes = await Route.find()
+            .populate('startAddress')
+            .populate('endAddress');
+
+        res.json(routes);
+    } catch (error) {
+        console.error('Failed to retrieve routes', error);
+        res.status(500).json({ error: 'Failed to retrieve routes' });
+    }
+}
+
 module.exports = {
     sendEmail,
     updateUserAccount,
@@ -316,5 +330,6 @@ module.exports = {
     getCollectors,
     getAreas,
     getLocations,
-    collectionSchedule
+    collectionSchedule,
+    getRoutes
 }

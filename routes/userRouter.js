@@ -22,7 +22,8 @@ const {
   getCollectors,
   getAreas,
   getLocations,
-  collectionSchedule
+  collectionSchedule,
+  getRoutes
 } = require("../controllers/userController");
 
 //cloudinary
@@ -52,5 +53,7 @@ router.get("/collectors", getCollectors)
 router.get("/areas", getAreas)
 router.get("/locations", getLocations)
 router.post("/collection-schedule", collectionSchedule)
+// Collection Routes
+router.get("/collection-routes", getRoutes)
 
 module.exports = router;
