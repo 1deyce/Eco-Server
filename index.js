@@ -40,13 +40,13 @@ const handler = (req, res) => {
 
 const corsHandler = allowCors(handler);
 
-app.use(cors({
-  origin: process.env.PROD_URL,
-  // origin: "http://localhost:3000",
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: process.env.PROD_URL,
+//   // origin: "http://localhost:3000",
+//   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true,
+// }));
 
 app.use("/", require("./routes/userRouter"), corsHandler);
 
