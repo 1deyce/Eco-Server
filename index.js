@@ -16,7 +16,8 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 // middleware
 app.use(express.json())
 app.use(cookieParser());
-app.use(express.urlencoded({extended: false}))    
+app.use(express.urlencoded({extended: false})) 
+
 app.use(cors({
   origin: process.env.PROD_URL,
   // origin: "http://localhost:3000",
