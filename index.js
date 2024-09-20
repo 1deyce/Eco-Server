@@ -26,7 +26,7 @@ app.use(express.urlencoded({extended: false}))
 //   credentials: true,
 // }));
 
-app.use("/", require("./routes/userRouter"), corsHandler);
+app.use("/", require("./routes/userRouter"));
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Server is running on ${port}`));
