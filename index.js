@@ -21,7 +21,7 @@ app.use(express.urlencoded({extended: false}))
 app.use(cors({
   origin: process.env.PROD_URL,
   // origin: "http://localhost:3000",
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  methods: ['GET','OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
